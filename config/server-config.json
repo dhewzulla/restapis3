@@ -1,0 +1,14 @@
+{
+	   "port": 9085,	   
+	   "path":"/cpt/:uuid",
+	   "store":{
+		   "folder":"/tmp",
+		   "suffix": ".json",
+		   "prefix": ""
+	   },
+	   "apikey":{
+		   "header":"X-C4-API-Key",
+		   "value":"@@@X_C4_API_KEY@@@"
+	   }
+
+}
