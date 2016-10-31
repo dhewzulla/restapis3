@@ -7,7 +7,7 @@
 		   "prefix": ""
 	   },
 	   "apikey":{
-		   "header":"X-C4-API-Key",
+		   "header":"@@@API_KEY_NAME@@@",
 		   "value":"@@@X_C4_API_KEY@@@"
 	   }
 
