@@ -6,9 +6,13 @@
 		   "suffix": ".json",
 		   "prefix": ""
 	   },
-	   "apikey":{
+	   
+	   "#apikey":{
 		   "header":"@@@API_KEY_NAME@@@",
-		   "value":"@@@X_C4_API_KEY@@@"
-	   }
+		   "value":"@@@API_KEY_VALUE@@@"
+	   },
+      "aws":{         
+         "bucket":"@@@APT_TOKEN_STORE_S3_BUCKET@@@"
+      }      
 
 }

@@ -4,7 +4,8 @@ var request = require('request');
 var util=require("util");
 var config=require("./config/server-config.json");
 var q = require('q');
-
+var AWS = require('aws-sdk');
+var s3 = new AWS.S3();
 logRequest=function(message,req,error,body){
 	console.log(message+"{{{");
 	console.log("url:"+req.url);
@@ -51,7 +52,8 @@ var s3store={
 				content=JSON.stringify(content);
 			}
 			console.log("writing to the file:"+uuid+"\n"+content);
-			fs.writeFile(config.store.folder+"/"+config.store.prefix+uuid+config.store.suffix, content, function (err) {
+			var destfilepath=config.store.folder+"/"+config.store.prefix+uuid+config.store.suffix;
+			fs.writeFile(destfilepath, content, function (err) {
 			  if (err){
 				  console.error(err);
 				  console.log("completed the request:"+uuid)
@@ -63,11 +65,34 @@ var s3store={
 				    console.log("successfully writen:"+uuid);	
 					console.log("completed the request:"+uuid)
 					res.writeHead(200, {'Content-Type': "application/json" });	
-					res.end(content);				
+					res.end(content);
+					s3store.uploadFileToS3(content,config.store.prefix+uuid+config.store.suffix);
 			  }
 			});
 				
 		},
+		uploadFileToS3:function(content, keyname){
+		    console.log("uploading to s3: bucket:"+config.aws.bucket+": key:"+keyname);
+		    var params = {Bucket: config.aws.bucket, Key: keyname, Body: content};
+		    s3.upload(params, function(err, data) {
+		      if (err)
+		        console.log(err)
+		      else
+		        console.log("Successfully uploaded data to " + config.aws.bucket + "/" + keyname);
+		    });
+		    
+		},
+		deleteFileFromS3:function(keyname){
+                    console.log("deleting from s3: bucket:"+config.aws.bucket+": key:"+keyname);
+                    var params = {Bucket: config.aws.bucket, Key: keyname};
+                    s3.deleteObject(params, function(err, data) {
+                      if (err)
+                        console.log(err)
+                      else
+                        console.log("Successfully delete s3 object " + config.aws.bucket + "/" + keyname);
+                    });
+                    
+                },
 		getstoredjson: function(uuid, res){
 			   
 				console.log("reading the the file:"+uuid+"\n");
@@ -115,7 +140,7 @@ var s3store={
 				fs.unlink(config.store.folder+"/"+config.store.prefix+uuid+config.store.suffix);
 			    res.writeHead(200, {'Content-Type': "application/json" });
 			    res.end('{"success":"'+uuid+' is deleted"}');				  
-					
+			    s3store.deleteFileFromS3(config.store.prefix+uuid+config.store.suffix);	
 					
 			}
 			

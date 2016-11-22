@@ -27,7 +27,7 @@ app.post(serverconfig.path,function(req,res){
 	
 });
 app.get(serverconfig.path,function(req,res){	
-	console.log(" received get request:"+req.params.uuid);
+	console.log("received get request:"+req.params.uuid);
 	s3store.checkapirequest(req,res,function(){
 		s3store.getstoredjson(req.params.uuid, res);
 	});

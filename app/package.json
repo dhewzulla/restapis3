@@ -16,6 +16,8 @@
     "static-favicon": "~1.0.0",
     "stylus": "0.42.3",
     "q": " 2.0.3",
-    "request":"2.76.0"
+    "request":"2.76.0",
+     "aws-sdk": ">= 2.0.9",
+     "node-uuid": ">= 1.4.1"     
   }
 }
